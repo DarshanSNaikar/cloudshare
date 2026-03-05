@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>CloudShare Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial, sans-serif;
+background:#f4f6f9;
+margin:0;
+padding:0;
+}
+
+/* HEADER */
+
+.header{
+background:#2c3e50;
+color:white;
+padding:15px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+font-size:22px;
+font-weight:bold;
+}
+
+.nav-buttons a{
+text-decoration:none;
+margin-left:10px;
+padding:8px 15px;
+border-radius:6px;
+color:white;
+font-size:14px;
+}
+
+.upload-btn{
+background:#27ae60;
+}
+
+.upload-btn:hover{
+background:#1e8449;
+}
+
+.logout-btn{
+background:#e74c3c;
+}
+
+.logout-btn:hover{
+background:#c0392b;
+}
+
+/* CONTAINER */
+
+.container{
+width:90%;
+margin:auto;
+margin-top:30px;
+}
+
+/* SECTION */
+
+.section{
+background:white;
+padding:20px;
+margin-bottom:30px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.section h2{
+margin-top:0;
+}
+
+/* CARDS */
+
+.cards{
+display:flex;
+flex-wrap:wrap;
+gap:20px;
+}
+
+.card{
+background:#fafafa;
+border:1px solid #ddd;
+padding:15px;
+border-radius:8px;
+width:300px;
+transition:0.2s;
+}
+
+.card:hover{
+box-shadow:0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* MEDIA */
+
+img{
+width:100%;
+border-radius:8px;
+}
+
+video{
+width:100%;
+border-radius:8px;
+}
+
+/* BUTTONS */
+
+button{
+border:none;
+padding:7px 12px;
+border-radius:5px;
+cursor:pointer;
+margin-top:5px;
+margin-right:5px;
+font-size:13px;
+}
+
+.generate{
+background:#3498db;
+color:white;
+}
+
+.generate:hover{
+background:#2980b9;
+}
+
+.copy{
+background:#9b59b6;
+color:white;
+}
+
+.copy:hover{
+background:#8e44ad;
+}
+
+.open{
+background:#2ecc71;
+color:white;
+}
+
+.open:hover{
+background:#27ae60;
+}
+
+.delete{
+background:#e74c3c;
+color:white;
+}
+
+.delete:hover{
+background:#c0392b;
+}
+
+input{
+width:100%;
+padding:5px;
+margin-top:8px;
+}
+
+.welcome{
+font-size:14px;
+opacity:0.9;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<div>
+<div class="logo">CloudShare</div>
+<div class="welcome">Welcome {{username}}</div>
+</div>
+
+<div class="nav-buttons">
+<a class="upload-btn" href="/upload/">Upload</a>
+<a class="logout-btn" href="/logout/">Logout</a>
+</div>
+
+</div>
+
+
+<div class="container">
+
+
+<!-- TEXT SECTION -->
+
+<div class="section">
+
+<h2>Texts</h2>
+
+<div class="cards">
+
+{% for item in texts %}
+
+<div class="card">
+
+<p>{{item.text_content}}</p>
+
+{% if item.share_code %}
+
+<input id="link{{item.id}}" value="http://127.0.0.1:8000/share/{{item.share_code}}" readonly>
+
+<button class="copy" onclick="copyLink('link{{item.id}}')">Copy</button>
+
+<a href="/share/{{item.share_code}}">
+<button class="open">Open</button>
+</a>
+
+{% else %}
+
+<a href="/generate-link/{{item.id}}">
+<button class="generate">Generate Link</button>
+</a>
+
+{% endif %}
+
+<a href="/delete/{{item.id}}">
+<button class="delete">Delete</button>
+</a>
+
+</div>
+
+{% empty %}
+
+<p>No text uploaded</p>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+
+
+<!-- IMAGE SECTION -->
+
+<div class="section">
+
+<h2>Images</h2>
+
+<div class="cards">
+
+{% for item in images %}
+
+<div class="card">
+
+<img src="{{item.file_url}}">
+
+{% if item.share_code %}
+
+<input id="link{{item.id}}" value="http://127.0.0.1:8000/share/{{item.share_code}}" readonly>
+
+<button class="copy" onclick="copyLink('link{{item.id}}')">Copy</button>
+
+<a href="/share/{{item.share_code}}">
+<button class="open">Open</button>
+</a>
+
+{% else %}
+
+<a href="/generate-link/{{item.id}}">
+<button class="generate">Generate Link</button>
+</a>
+
+{% endif %}
+
+<a href="/delete/{{item.id}}">
+<button class="delete">Delete</button>
+</a>
+
+</div>
+
+{% empty %}
+
+<p>No images uploaded</p>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+
+
+<!-- VIDEO SECTION -->
+
+<div class="section">
+
+<h2>Videos</h2>
+
+<div class="cards">
+
+{% for item in videos %}
+
+<div class="card">
+
+<video controls>
+<source src="{{item.file_url}}">
+</video>
+
+{% if item.share_code %}
+
+<input id="link{{item.id}}" value="http://127.0.0.1:8000/share/{{item.share_code}}" readonly>
+
+<button class="copy" onclick="copyLink('link{{item.id}}')">Copy</button>
+
+<a href="/share/{{item.share_code}}">
+<button class="open">Open</button>
+</a>
+
+{% else %}
+
+<a href="/generate-link/{{item.id}}">
+<button class="generate">Generate Link</button>
+</a>
+
+{% endif %}
+
+<a href="/delete/{{item.id}}">
+<button class="delete">Delete</button>
+</a>
+
+</div>
+
+{% empty %}
+
+<p>No videos uploaded</p>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+function copyLink(id){
+
+var copyText = document.getElementById(id);
+
+copyText.select();
+
+copyText.setSelectionRange(0,99999);
+
+navigator.clipboard.writeText(copyText.value);
+
+alert("Link copied!");
+
+}
+
+</script>
+
+</body>
+
+</html>

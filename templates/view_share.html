@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Shared Content</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f9;
+text-align:center;
+}
+
+.container{
+background:white;
+width:700px;
+margin:auto;
+margin-top:80px;
+padding:30px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+img{
+max-width:100%;
+border-radius:10px;
+}
+
+video{
+max-width:100%;
+border-radius:10px;
+}
+
+.btn{
+display:inline-block;
+margin-top:20px;
+text-decoration:none;
+background:#4CAF50;
+color:white;
+padding:10px 20px;
+border-radius:5px;
+}
+
+.btn:hover{
+background:#45a049;
+}
+
+.download{
+background:#3498db;
+margin-left:10px;
+}
+
+.download:hover{
+background:#2980b9;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Shared Content</h2>
+
+{% if media %}
+
+    {% if media.type == "text" %}
+
+        <p style="font-size:18px;">{{ media.text_content }}</p>
+
+        <br>
+
+        <a class="btn download"
+           href="data:text/plain;charset=utf-8,{{ media.text_content }}"
+           download="shared_text.txt">
+           Download Text
+        </a>
+
+    {% elif media.type == "video" %}
+
+        <video controls>
+            <source src="{{ media.file_url }}">
+            Your browser does not support video.
+        </video>
+
+        <br>
+
+        <a class="btn download" href="{{ media.file_url }}" download>
+            Download Video
+        </a>
+
+    {% else %}
+
+        <img src="{{ media.file_url }}">
+
+        <br>
+
+        <a class="btn download" href="{{ media.file_url }}" download>
+            Download Image
+        </a>
+
+    {% endif %}
+
+{% else %}
+
+<p>Content not found.</p>
+
+{% endif %}
+
+<br><br>
+
+<a class="btn" href="/dashboard/">Go to Dashboard</a>
+
+</div>
+
+</body>
+</html>
