@@ -311,7 +311,9 @@ opacity:0.9;
 
 {% if item.share_code %}
 
-<input id="link{{item.id}}" value="http://127.0.0.1:8000/share/{{item.share_code}}" readonly>
+<input id="link{{item.id}}" 
+value="{{ request.scheme }}://{{ request.get_host }}/share/{{ item.share_code }}" 
+readonly>
 
 <button class="copy" onclick="copyLink('link{{item.id}}')">Copy</button>
 
